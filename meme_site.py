@@ -9,7 +9,7 @@ app = Flask(__name__)
 def get_meme():
     # Uncomment these 2 lines and comment out the other URL for a specific subreddit
     # sr = "/wholesomememes"
-    # url = "https://meme-api.herokuapp.com/gimmie" + sr
+    # url = "https://meme-api.com/gimme" + sr
     url = "https://meme-api.com/gimme"  # Corrected typo in the URL
     try:
         response = requests.get(url)
