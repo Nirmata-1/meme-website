@@ -29,4 +29,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Command to run the Flask app
-CMD ["sh", "-c", "flask run --host=0.0.0.0 --port=$PORT"]
+CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:$PORT meme_site:app"]
