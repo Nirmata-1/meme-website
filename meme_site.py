@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template
 import requests
-import json
+import os #Import os for environment variables
 
 app = Flask(__name__)
 
@@ -26,10 +26,12 @@ def get_meme():
 def index():
     meme_pic, subreddit = get_meme()
     if meme_pic is None:
-        meme_pic = "https://via.placeholder.com/500x500.png?text=No+Meme+Available"  # Placeholder image
+        meme_pic = "https://imgflip.com/memegenerator/264254566/Image-Not-Available"  # Placeholder image
         subreddit = "Unknown"
+    refresh_url = os.getenv("REFRESH_URL", "/")  # Defaults to "/"
     return render_template("meme_index.html", meme_pic=meme_pic, subreddit=subreddit)
 
-# Start the Flask app
-app.run(host="0.0.0.0", port=80)
-
+# Start the Flask app with configurable port
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 80))  # Default to port 80 if not set
+    app.run(host="0.0.0.0", port=port)
