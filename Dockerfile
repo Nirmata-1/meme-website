@@ -1,32 +1,38 @@
-# Use the official Python base image with Alpine for minimal size
-FROM python:3.11-alpine
+# Use an official Go image based on Alpine
+FROM golang:1.23.4-alpine AS builder
 
-# Disable Python output buffering
-ENV PYTHONUNBUFFERED=1 
-
-# Flask app entry point
-ENV FLASK_APP=meme_site.py
-
-# Default port for Flask  
-ENV PORT=5000            
-
-# Default refresh URL
-ENV REFRESH_URL=/       
-
-# Install system dependencies for Python and Flask
-RUN apk add --no-cache gcc musl-dev libffi-dev python3-dev git
-
-# Create a working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy requirements first to leverage Docker layer caching
-COPY requirements.txt ./
+# Install dependencies required for Go and for building the binary
+RUN apk add --no-cache git
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy go.mod and go.sum files to cache dependencies
+COPY go.mod go.sum ./
 
-# Copy the rest of the application code into the container
+# Download dependencies
+RUN go mod download
+
+# Copy the application code
 COPY . .
 
-# Command to run the Flask app
-CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:$PORT meme_site:app"]
+# Build the Go application
+RUN go build -o main .
+
+# Use a minimal Alpine image for the runtime
+FROM alpine:latest
+
+# Set the working directory inside the runtime image
+WORKDIR /app
+
+# Copy the compiled binary from the builder stage
+COPY --from=builder /app/main .
+
+# Copy templates (if applicable)
+COPY templates ./templates
+
+# Expose the application port
+EXPOSE 8080
+
+# Command to run the application
+CMD ["./main"]
