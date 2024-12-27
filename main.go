@@ -68,7 +68,8 @@ func main() {
 
     http.HandleFunc("/", getMeme)
 
-    // Start the web server on port 8080
-    fmt.Println("Server started at http://localhost:8080")
-    log.Fatal(http.ListenAndServe(":8080", nil))
-}
+    // Read the port from an environment variable or use 80 as the default
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "80" // Default port if not specified
+    }
