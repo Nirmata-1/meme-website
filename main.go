@@ -73,3 +73,8 @@ func main() {
     if port == "" {
         port = "80" // Default port if not specified
     }
+
+    // Start the server with the port specified in the config file
+    fmt.Printf("Server starting on port %s...\n", port)
+    log.Fatal(http.ListenAndServe(":"+port, nil))
+}
