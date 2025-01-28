@@ -49,21 +49,36 @@
             justify-content: center;
         }
 
-        .meme {
-            max-width: 90%;
-            max-height: 65vh;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
+        .meme-link {
+            display: inline-block;
             margin: 2rem 0;
+            max-width: 90%;
+            position: relative;
+            background: transparent;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .meme {
+            max-width: 100%;
+            max-height: 70vh;
+            border-radius: 14px;
+            display: block;
+            margin: 0 auto;
+            background: #2a2a2a;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.2s ease;
+            box-sizing: border-box;
+            object-fit: contain;
+            width: auto;
+            height: auto;
         }
 
-        .meme:hover {
+        .meme-link:hover .meme {
             transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
         }
 
-        .caption {
+        .subreddit-button {
             font-size: 1.25rem;
             font-weight: 500;
             margin: 1rem 0;
@@ -72,6 +87,15 @@
             padding: 0.75rem 1.5rem;
             border-radius: 30px;
             border: 1px solid rgba(0, 123, 255, 0.2);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .subreddit-button:hover {
+            background-color: rgba(0, 123, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
         }
 
         p {
@@ -91,15 +115,69 @@
             background-color: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        .refresh-info {
+            color: #a0a0a0;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .countdown {
+            color: #007bff;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Meme Website</h1>
-        <p>Enjoy fresh memes delivered every 30 seconds! Automatically refreshing...</p>
-        <img class="meme" src="{{.URL}}" alt="{{.Title}}">
-        <div class="caption">Current Subreddit: {{.Subreddit}}</div>
+        <div class="refresh-info">
+            Enjoy fresh memes! Auto-refreshing in <span class="countdown">30</span> seconds...
+        </div>
+        
+        <a href="{{.PostLink}}" class="meme-link" target="_blank" rel="noopener noreferrer">
+            <img class="meme" src="{{.URL}}" alt="{{.Title}}">
+        </a>
+        
+        <a href="https://www.reddit.com/r/{{.Subreddit}}" class="subreddit-button" target="_blank" rel="noopener noreferrer">
+            Visit r/{{.Subreddit}}
+        </a>
+        
         <div class="footer">Now in GO!</div>
     </div>
+
+    <script>
+        // Countdown timer
+        let timeLeft = 30;
+        const countdownElement = document.querySelector('.countdown');
+        
+        function updateCountdown() {
+            countdownElement.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                window.location.reload();
+            } else {
+                timeLeft--;
+                setTimeout(updateCountdown, 1000);
+            }
+        }
+
+        // Start the countdown when the page loads
+        document.addEventListener('DOMContentLoaded', updateCountdown);
+
+        // Ensure proper image scaling
+        document.querySelectorAll('.meme').forEach(img => {
+            img.onload = function() {
+                const ratio = img.naturalWidth / img.naturalHeight;
+                if (ratio > 2) {
+                    img.style.maxWidth = '90vw';
+                    img.style.maxHeight = 'none';
+                } else if (ratio < 0.5) {
+                    img.style.maxHeight = '70vh';
+                    img.style.maxWidth = 'none';
+                }
+            };
+        });
+    </script>
 </body>
 </html>

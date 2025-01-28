@@ -9,7 +9,6 @@ import (
     "os"
 )
 
-// MemeResponse represents the JSON structure of the meme API response
 type MemeResponse struct {
     PostLink  string `json:"postLink"`
     Title     string `json:"title"`
@@ -25,7 +24,7 @@ func initBaseURL() {
     case "true":
         baseURL += "/wholesome"
     case "", "false":
-        // Default behavior
+    // Default behavior
     default:
         log.Printf("Warning: Invalid value for WHOLESOME: %s. Using default behavior.", wholesome)
     }
@@ -50,14 +49,12 @@ func getMeme(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    // Parse the template
     tmpl, err := template.ParseFiles("templates/index.html")
     if err != nil {
         http.Error(w, "Failed to load template", http.StatusInternalServerError)
         return
     }
 
-    // Render the template with meme data
     if err := tmpl.Execute(w, meme); err != nil {
         http.Error(w, "Failed to render template", http.StatusInternalServerError)
     }
@@ -65,16 +62,13 @@ func getMeme(w http.ResponseWriter, r *http.Request) {
 
 func main() {
     initBaseURL()
-
     http.HandleFunc("/", getMeme)
 
-    // Read the port from an environment variable or use 80 as the default
     port := os.Getenv("PORT")
     if port == "" {
-        port = "80" // Default port if not specified
+        port = "80"
     }
 
-    // Start the server with the port specified in the config file
     fmt.Printf("Server starting on port %s...\n", port)
     log.Fatal(http.ListenAndServe(":"+port, nil))
 }
