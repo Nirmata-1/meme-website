@@ -6,30 +6,96 @@
     <title>Meme Website</title>
     <meta http-equiv="refresh" content="30;url=/">
     <style>
-        /* ... (keep all previous styles) ... */
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
 
         h1 {
-            font-size: 2.25rem; /* Slightly reduced font size */
+            font-size: 2.25rem;
             margin: 1.5rem 0;
             color: #ffffff;
             font-weight: 600;
             position: relative;
             padding-bottom: 1rem;
-            white-space: nowrap; /* Prevent line breaks */
-            overflow: hidden; /* Ensure text doesn't wrap */
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 3px;
+            background-color: #007bff;
+            border-radius: 2px;
         }
 
         .container {
-            max-width: 1400px; /* Increased max-width for better spacing */
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 2rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* ... (rest of the styles remain the same) ... */
+        .meme {
+            max-width: 90%;
+            max-height: 65vh;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 123, 255, 0.15);
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .meme:hover {
+            transform: translateY(-4px);
+        }
+
+        .caption {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 1rem 0;
+            color: #007bff;
+            background-color: rgba(0, 123, 255, 0.1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            border: 1px solid rgba(0, 123, 255, 0.2);
+        }
+
+        p {
+            color: #a0a0a0;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 3rem;
+            color: #666;
+            font-size: 0.9rem;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Welcome To The Meme Website</h1> <!-- Removed "Welcome to the" for conciseness -->
+        <h1>Meme Website</h1>
         <p>Enjoy fresh memes delivered every 30 seconds! Automatically refreshing...</p>
         <img class="meme" src="{{.URL}}" alt="{{.Title}}">
         <div class="caption">Current Subreddit: {{.Subreddit}}</div>
